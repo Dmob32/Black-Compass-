@@ -1,0 +1,183 @@
+import React, { useState } from 'react';
+import { Star, Shield, Clock, Heart, Search, Menu, ArrowRight, Navigation } from 'lucide-react';
+
+const BlackCompass = () => {
+  const [currentScreen, setCurrentScreen] = useState('cities');
+  const [selectedCity, setSelectedCity] = useState('Atlanta');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('All');
+
+  const cities = [
+    { name: 'Atlanta', state: 'GA', spots: 80 },
+    { name: 'Dallas', state: 'TX', spots: 80 },
+    { name: 'Houston', state: 'TX', spots: 80 },
+    { name: 'Austin', state: 'TX', spots: 80 },
+    { name: 'Chicago', state: 'IL', spots: 80 },
+    { name: 'Detroit', state: 'MI', spots: 80 },
+    { name: 'Washington DC', state: 'DMV', spots: 80 },
+    { name: 'Baltimore', state: 'MD', spots: 80 },
+    { name: 'Miami', state: 'FL', spots: 80 },
+    { name: 'Orlando', state: 'FL', spots: 80 },
+    { name: 'Tampa', state: 'FL', spots: 80 },
+    { name: 'Jacksonville', state: 'FL', spots: 80 },
+    { name: 'Los Angeles', state: 'CA', spots: 80 },
+    { name: 'Oakland', state: 'CA', spots: 80 },
+    { name: 'San Diego', state: 'CA', spots: 80 }
+  ];
+
+  const categories = [
+    { name: 'Restaurants', icon: '🍽️', count: 10 },
+    { name: 'Nightlife', icon: '🌙', count: 10 },
+    { name: 'Wellness', icon: '🧘‍♀️', count: 10 },
+    { name: 'Nature', icon: '🌲', count: 10 },
+    { name: 'Shopping', icon: '🛍️', count: 10 },
+    { name: 'Events', icon: '🎉', count: 10 },
+    { name: 'Entertainment', icon: '🎵', count: 10 },
+    { name: 'Family Fun', icon: '👨‍👩‍👧‍👦', count: 10 }
+  ];
+
+  const getBusinessesForCity = (cityName) => {
+    const cityData = {
+      'Atlanta': [
+        { name: "Slutty Vegan", type: "Restaurant", rating: 4.8, safety: 4.9, blackOwned: true, image: "🍔", neighborhood: "Westside", price: "$", openLate: false },
+        { name: "The Trap Museum", type: "Entertainment", rating: 4.6, safety: 4.7, blackOwned: true, image: "🎵", neighborhood: "Castleberry Hill", price: "$", openLate: false },
+        { name: "Le Bilboquet", type: "Restaurant", rating: 4.7, safety: 4.8, blackOwned: false, image: "🥂", neighborhood: "Buckhead", price: "$$", openLate: true },
+        { name: "Zoo Atlanta", type: "Family Fun", rating: 4.5, safety: 4.9, blackOwned: false, image: "🦁", neighborhood: "Grant Park", price: "$$", openLate: false },
+        { name: "Magic City", type: "Nightlife", rating: 4.4, safety: 4.5, blackOwned: true, image: "💃", neighborhood: "Southwest Atlanta", price: "$$", openLate: true },
+        { name: "Ponce City Market", type: "Shopping", rating: 4.6, safety: 4.8, blackOwned: false, image: "🛍️", neighborhood: "Poncey-Highland", price: "$", openLate: false },
+        { name: "Center for Civil Rights", type: "Family Fun", rating: 4.8, safety: 4.9, blackOwned: false, image: "🏛️", neighborhood: "Downtown", price: "$", openLate: false },
+        { name: "Krog Street Market", type: "Restaurant", rating: 4.5, safety: 4.7, blackOwned: false, image: "🍽️", neighborhood: "Inman Park", price: "$", openLate: false },
+        { name: "State Farm Arena", type: "Entertainment", rating: 4.6, safety: 4.8, blackOwned: false, image: "🏀", neighborhood: "Downtown", price: "$$", openLate: true },
+        { name: "Sweetwater Creek Trail", type: "Nature", rating: 4.7, safety: 4.6, blackOwned: false, image: "🌲", neighborhood: "Douglas County", price: "Free", openLate: false }
+      ],
+      'Dallas': [
+        { name: "Petra and the Beast", type: "Restaurant", rating: 4.6, safety: 4.7, blackOwned: false, image: "🥩", neighborhood: "Bishop Arts", price: "$$", openLate: false },
+        { name: "Deep Ellum Live", type: "Entertainment", rating: 4.5, safety: 4.4, blackOwned: false, image: "🎸", neighborhood: "Deep Ellum", price: "$", openLate: true },
+        { name: "It'll Do Club", type: "Nightlife", rating: 4.4, safety: 4.5, blackOwned: false, image: "🎵", neighborhood: "Deep Ellum", price: "$", openLate: true },
+        { name: "Dallas World Aquarium", type: "Family Fun", rating: 4.4, safety: 4.7, blackOwned: false, image: "🐠", neighborhood: "Downtown", price: "$$", openLate: false },
+        { name: "Pecan Lodge", type: "Restaurant", rating: 4.5, safety: 4.6, blackOwned: false, image: "🍖", neighborhood: "Deep Ellum", price: "$", openLate: false },
+        { name: "Cowboys Red River", type: "Nightlife", rating: 4.3, safety: 4.4, blackOwned: false, image: "🤠", neighborhood: "Deep Ellum", price: "$", openLate: true },
+        { name: "Sixth Floor Museum", type: "Family Fun", rating: 4.6, safety: 4.8, blackOwned: false, image: "📚", neighborhood: "Downtown", price: "$", openLate: false },
+        { name: "NorthPark Center", type: "Shopping", rating: 4.5, safety: 4.8, blackOwned: false, image: "🛍️", neighborhood: "North Dallas", price: "$$", openLate: false },
+        { name: "House of Blues", type: "Entertainment", rating: 4.4, safety: 4.6, blackOwned: false, image: "🎵", neighborhood: "Deep Ellum", price: "$$", openLate: true },
+        { name: "White Rock Lake", type: "Nature", rating: 4.5, safety: 4.6, blackOwned: false, image: "🌊", neighborhood: "East Dallas", price: "Free", openLate: false }
+      ],
+      'Houston': [
+        { name: "Turkey Leg Hut", type: "Restaurant", rating: 4.5, safety: 4.6, blackOwned: true, image: "🍗", neighborhood: "Third Ward", price: "$", openLate: false },
+        { name: "The Heights Market", type: "Entertainment", rating: 4.4, safety: 4.6, blackOwned: false, image: "🎨", neighborhood: "Heights", price: "$", openLate: false },
+        { name: "Spire", type: "Nightlife", rating: 4.3, safety: 4.5, blackOwned: false, image: "🍸", neighborhood: "Downtown", price: "$$", openLate: true },
+        { name: "Space Center Houston", type: "Family Fun", rating: 4.5, safety: 4.9, blackOwned: false, image: "🚀", neighborhood: "Clear Lake", price: "$$", openLate: false },
+        { name: "The Breakfast Klub", type: "Restaurant", rating: 4.6, safety: 4.7, blackOwned: true, image: "🥞", neighborhood: "Midtown", price: "$", openLate: false },
+        { name: "Howl at the Moon", type: "Nightlife", rating: 4.2, safety: 4.4, blackOwned: false, image: "🌙", neighborhood: "Downtown", price: "$", openLate: true },
+        { name: "Houston Museum District", type: "Family Fun", rating: 4.7, safety: 4.8, blackOwned: false, image: "🏛️", neighborhood: "Museum District", price: "$", openLate: false },
+        { name: "The Galleria", type: "Shopping", rating: 4.3, safety: 4.7, blackOwned: false, image: "🛍️", neighborhood: "Uptown", price: "$$", openLate: false },
+        { name: "Buffalo Bayou Park", type: "Nature", rating: 4.6, safety: 4.5, blackOwned: false, image: "🌳", neighborhood: "Downtown", price: "Free", openLate: false },
+        { name: "Miller Outdoor Theatre", type: "Entertainment", rating: 4.4, safety: 4.7, blackOwned: false, image: "🎭", neighborhood: "Hermann Park", price: "Free", openLate: true }
+      ],
+      'Austin': [
+        { name: "Franklin Barbecue", type: "Restaurant", rating: 4.7, safety: 4.8, blackOwned: false, image: "🍖", neighborhood: "East Austin", price: "$", openLate: false },
+        { name: "6th Street Live", type: "Entertainment", rating: 4.5, safety: 4.3, blackOwned: false, image: "🎤", neighborhood: "Downtown", price: "$", openLate: true },
+        { name: "Rainey Street", type: "Nightlife", rating: 4.5, safety: 4.6, blackOwned: false, image: "🍻", neighborhood: "Rainey Street", price: "$", openLate: true },
+        { name: "Zilker Park", type: "Nature", rating: 4.6, safety: 4.7, blackOwned: false, image: "🌳", neighborhood: "South Austin", price: "Free", openLate: false },
+        { name: "Salt Traders", type: "Restaurant", rating: 4.5, safety: 4.7, blackOwned: false, image: "🦐", neighborhood: "South Austin", price: "$$", openLate: false },
+        { name: "Antone's Nightclub", type: "Nightlife", rating: 4.4, safety: 4.5, blackOwned: false, image: "🎸", neighborhood: "East Austin", price: "$", openLate: true },
+        { name: "Bullock Museum", type: "Family Fun", rating: 4.4, safety: 4.8, blackOwned: false, image: "🏛️", neighborhood: "Downtown", price: "$", openLate: false },
+        { name: "South Congress", type: "Shopping", rating: 4.6, safety: 4.5, blackOwned: false, image: "🛍️", neighborhood: "South Austin", price: "$", openLate: false },
+        { name: "Lady Bird Lake", type: "Nature", rating: 4.7, safety: 4.6, blackOwned: false, image: "🚣‍♀️", neighborhood: "Downtown", price: "Free", openLate: false },
+        { name: "Austin City Limits", type: "Entertainment", rating: 4.6, safety: 4.4, blackOwned: false, image: "🎵", neighborhood: "Zilker Park", price: "$$", openLate: true }
+      ],
+      'Chicago': [
+        { name: "Girl & Goat", type: "Restaurant", rating: 4.6, safety: 4.7, blackOwned: false, image: "🐐", neighborhood: "West Loop", price: "$$", openLate: false },
+        { name: "Chicago Theatre", type: "Entertainment", rating: 4.7, safety: 4.8, blackOwned: false, image: "🎭", neighborhood: "Loop", price: "$$", openLate: false },
+        { name: "Green Mill", type: "Nightlife", rating: 4.5, safety: 4.6, blackOwned: false, image: "🎷", neighborhood: "Uptown", price: "$", openLate: true },
+        { name: "Shedd Aquarium", type: "Family Fun", rating: 4.4, safety: 4.9, blackOwned: false, image: "🐋", neighborhood: "Museum Campus", price: "$$", openLate: false },
+        { name: "Lou Malnati's", type: "Restaurant", rating: 4.5, safety: 4.7, blackOwned: false, image: "🍕", neighborhood: "Multiple", price: "$", openLate: true },
+        { name: "House of Blues", type: "Nightlife", rating: 4.4, safety: 4.5, blackOwned: false, image: "🎵", neighborhood: "Marina City", price: "$$", openLate: true },
+        { name: "Navy Pier", type: "Family Fun", rating: 4.3, safety: 4.8, blackOwned: false, image: "🎡", neighborhood: "Streeterville", price: "$", openLate: false },
+        { name: "Magnificent Mile", type: "Shopping", rating: 4.4, safety: 4.7, blackOwned: false, image: "🛍️", neighborhood: "Near North", price: "$$", openLate: false },
+        { name: "Lakefront Trail", type: "Nature", rating: 4.7, safety: 4.6, blackOwned: false, image: "🏃‍♀️", neighborhood: "Lakefront", price: "Free", openLate: false },
+        { name: "Kingston Mines", type: "Entertainment", rating: 4.3, safety: 4.4, blackOwned: false, image: "🎸", neighborhood: "Lincoln Park", price: "$", openLate: true }
+      ],
+      'Detroit': [
+        { name: "Selden Standard", type: "Restaurant", rating: 4.5, safety: 4.6, blackOwned: false, image: "🍽️", neighborhood: "Midtown", price: "$$", openLate: false },
+        { name: "Motown Museum", type: "Entertainment", rating: 4.6, safety: 4.5, blackOwned: false, image: "🎵", neighborhood: "Hitsville", price: "$", openLate: false },
+        { name: "Motor City Wine", type: "Nightlife", rating: 4.4, safety: 4.7, blackOwned: true, image: "🍷", neighborhood: "Corktown", price: "$", openLate: true },
+        { name: "Detroit Institute of Arts", type: "Family Fun", rating: 4.5, safety: 4.8, blackOwned: false, image: "🎨", neighborhood: "Midtown", price: "$", openLate: false },
+        { name: "Coney Island", type: "Restaurant", rating: 4.3, safety: 4.5, blackOwned: false, image: "🌭", neighborhood: "Downtown", price: "$", openLate: true },
+        { name: "The Sugar House", type: "Nightlife", rating: 4.5, safety: 4.6, blackOwned: false, image: "🍸", neighborhood: "Corktown", price: "$", openLate: true },
+        { name: "Detroit Zoo", type: "Family Fun", rating: 4.4, safety: 4.8, blackOwned: false, image: "🦁", neighborhood: "Royal Oak", price: "$$", openLate: false },
+        { name: "Eastern Market", type: "Shopping", rating: 4.3, safety: 4.4, blackOwned: false, image: "🛍️", neighborhood: "Eastern Market", price: "$", openLate: false },
+        { name: "Belle Isle Park", type: "Nature", rating: 4.5, safety: 4.5, blackOwned: false, image: "🌴", neighborhood: "Belle Isle", price: "Free", openLate: false },
+        { name: "Fox Theatre", type: "Entertainment", rating: 4.7, safety: 4.8, blackOwned: false, image: "🎭", neighborhood: "Downtown", price: "$$", openLate: true }
+      ],
+      'Washington DC': [
+        { name: "Ben's Chili Bowl", type: "Restaurant", rating: 4.6, safety: 4.8, blackOwned: true, image: "🌭", neighborhood: "U Street", price: "$", openLate: true },
+        { name: "Howard Theatre", type: "Entertainment", rating: 4.8, safety: 4.7, blackOwned: false, image: "🎭", neighborhood: "Shaw", price: "$$", openLate: true },
+        { name: "The Park at 14th", type: "Nightlife", rating: 4.7, safety: 4.6, blackOwned: false, image: "🍸", neighborhood: "14th Street", price: "$$", openLate: true },
+        { name: "African American Museum", type: "Family Fun", rating: 4.9, safety: 4.9, blackOwned: false, image: "🏛️", neighborhood: "National Mall", price: "Free", openLate: false },
+        { name: "Busboys and Poets", type: "Restaurant", rating: 4.4, safety: 4.7, blackOwned: true, image: "📚", neighborhood: "Multiple", price: "$", openLate: true },
+        { name: "9:30 Club", type: "Entertainment", rating: 4.6, safety: 4.5, blackOwned: false, image: "🎵", neighborhood: "Shaw", price: "$$", openLate: true },
+        { name: "Union Market", type: "Shopping", rating: 4.4, safety: 4.7, blackOwned: false, image: "🛍️", neighborhood: "NoMa", price: "$", openLate: false },
+        { name: "Half Smoke", type: "Restaurant", rating: 4.3, safety: 4.6, blackOwned: true, image: "🌭", neighborhood: "H Street", price: "$", openLate: true },
+        { name: "The Wharf", type: "Entertainment", rating: 4.5, safety: 4.8, blackOwned: false, image: "🌊", neighborhood: "Southwest", price: "$$", openLate: false },
+        { name: "Rock Creek Park", type: "Nature", rating: 4.7, safety: 4.8, blackOwned: false, image: "🌳", neighborhood: "Northwest", price: "Free", openLate: false }
+      ],
+      'Baltimore': [
+        { name: "Thames Street Oyster House", type: "Restaurant", rating: 4.5, safety: 4.6, blackOwned: false, image: "🦪", neighborhood: "Fells Point", price: "$$", openLate: false },
+        { name: "American Visionary Art Museum", type: "Entertainment", rating: 4.6, safety: 4.7, blackOwned: false, image: "🎨", neighborhood: "Federal Hill", price: "$", openLate: false },
+        { name: "The Horse You Came In On", type: "Nightlife", rating: 4.3, safety: 4.5, blackOwned: false, image: "🍺", neighborhood: "Fells Point", price: "$", openLate: true },
+        { name: "National Aquarium", type: "Family Fun", rating: 4.4, safety: 4.8, blackOwned: false, image: "🐙", neighborhood: "Inner Harbor", price: "$$", openLate: false },
+        { name: "Phillips Seafood", type: "Restaurant", rating: 4.4, safety: 4.7, blackOwned: false, image: "🦀", neighborhood: "Inner Harbor", price: "$$", openLate: false },
+        { name: "Power Plant Live", type: "Nightlife", rating: 4.2, safety: 4.4, blackOwned: false, image: "🎵", neighborhood: "Inner Harbor", price: "$", openLate: true },
+        { name: "Fort McHenry", type: "Family Fun", rating: 4.5, safety: 4.8, blackOwned: false, image: "🏰", neighborhood: "Locust Point", price: "$", openLate: false },
+        { name: "Lexington Market", type: "Shopping", rating: 4.2, safety: 4.3, blackOwned: false, image: "🛍️", neighborhood: "Downtown", price: "$", openLate: false },
+        { name: "Patapsco Valley State Park", type: "Nature", rating: 4.6, safety: 4.6, blackOwned: false, image: "🌲", neighborhood: "Patapsco", price: "Free", openLate: false },
+        { name: "Pier Six Pavilion", type: "Entertainment", rating: 4.4, safety: 4.7, blackOwned: false, image: "🎪", neighborhood: "Inner Harbor", price: "$$", openLate: true }
+      ],
+      'Miami': [
+        { name: "Yardbird", type: "Restaurant", rating: 4.7, safety: 4.8, blackOwned: false, image: "🍗", neighborhood: "South Beach", price: "$$", openLate: false },
+        { name: "LIV Nightclub", type: "Nightlife", rating: 4.5, safety: 4.6, blackOwned: false, image: "💃", neighborhood: "South Beach", price: "$$", openLate: true },
+        { name: "Wynwood Walls", type: "Entertainment", rating: 4.6, safety: 4.5, blackOwned: false, image: "🎨", neighborhood: "Wynwood", price: "Free", openLate: false },
+        { name: "Miami Seaquarium", type: "Family Fun", rating: 4.3, safety: 4.8, blackOwned: false, image: "🐬", neighborhood: "Key Biscayne", price: "$$", openLate: false },
+        { name: "Joe's Stone Crab", type: "Restaurant", rating: 4.6, safety: 4.8, blackOwned: false, image: "🦀", neighborhood: "South Beach", price: "$$", openLate: true },
+        { name: "Story Nightclub", type: "Nightlife", rating: 4.4, safety: 4.5, blackOwned: false, image: "🎵", neighborhood: "South Beach", price: "$$", openLate: true },
+        { name: "Design District", type: "Shopping", rating: 4.5, safety: 4.8, blackOwned: false, image: "🛍️", neighborhood: "Design District", price: "$$", openLate: false },
+        { name: "Ball & Chain", type: "Entertainment", rating: 4.4, safety: 4.6, blackOwned: false, image: "🎺", neighborhood: "Little Havana", price: "$", openLate: true },
+        { name: "Versailles Restaurant", type: "Restaurant", rating: 4.5, safety: 4.7, blackOwned: false, image: "🇨🇺", neighborhood: "Little Havana", price: "$", openLate: true },
+        { name: "Crandon Park Beach", type: "Nature", rating: 4.6, safety: 4.7, blackOwned: false, image: "🏖️", neighborhood: "Key Biscayne", price: "Free", openLate: false }
+      ],
+      'Orlando': [
+        { name: "The Ravenous Pig", type: "Restaurant", rating: 4.6, safety: 4.8, blackOwned: false, image: "🐷", neighborhood: "Winter Park", price: "$$", openLate: false },
+        { name: "Universal Studios", type: "Entertainment", rating: 4.5, safety: 4.7, blackOwned: false, image: "🎢", neighborhood: "Universal", price: "$$", openLate: false },
+        { name: "Wall Street Plaza", type: "Nightlife", rating: 4.3, safety: 4.5, blackOwned: false, image: "🍹", neighborhood: "Downtown", price: "$", openLate: true },
+        { name: "Disney World", type: "Family Fun", rating: 4.8, safety: 4.9, blackOwned: false, image: "🏰", neighborhood: "Bay Lake", price: "$$", openLate: false },
+        { name: "Se7en Bites", type: "Restaurant", rating: 4.5, safety: 4.6, blackOwned: false, image: "🧁", neighborhood: "Milk District", price: "$", openLate: false },
+        { name: "CityWalk", type: "Nightlife", rating: 4.4, safety: 4.6, blackOwned: false, image: "🎭", neighborhood: "Universal", price: "$$", openLate: true },
+        { name: "ICON Park", type: "Family Fun", rating: 4.3, safety: 4.7, blackOwned: false, image: "🎡", neighborhood: "I-Drive", price: "$$", openLate: false },
+        { name: "Disney Springs", type: "Shopping", rating: 4.6, safety: 4.8, blackOwned: false, image: "🛍️", neighborhood: "Disney Springs", price: "$$", openLate: false },
+        { name: "Bok Tower Gardens", type: "Nature", rating: 4.7, safety: 4.8, blackOwned: false, image: "🌺", neighborhood: "Lake Wales", price: "$", openLate: false },
+        { name: "Blue Man Group", type: "Entertainment", rating: 4.5, safety: 4.8, blackOwned: false, image: "🔵", neighborhood: "Universal", price: "$$", openLate: true }
+      ],
+      'Tampa': [
+        { name: "Bern's Steak House", type: "Restaurant", rating: 4.6, safety: 4.8, blackOwned: false, image: "🥩", neighborhood: "Hyde Park", price: "$$", openLate: false },
+        { name: "Ybor City", type: "Entertainment", rating: 4.4, safety: 4.5, blackOwned: false, image: "🎭", neighborhood: "Ybor", price: "$", openLate: true },
+        { name: "The Castle", type: "Nightlife", rating: 4.3, safety: 4.4, blackOwned: false, image: "🏰", neighborhood: "Ybor", price: "$", openLate: true },
+        { name: "Busch Gardens", type: "Family Fun", rating: 4.5, safety: 4.7, blackOwned: false, image: "🎢", neighborhood: "Tampa", price: "$$", openLate: false },
+        { name: "Columbia Restaurant", type: "Restaurant", rating: 4.4, safety: 4.6, blackOwned: false, image: "🥘", neighborhood: "Ybor", price: "$$", openLate: false },
+        { name: "Armature Works", type: "Shopping", rating: 4.5, safety: 4.7, blackOwned: false, image: "🛍️", neighborhood: "Tampa Heights", price: "$", openLate: false },
+        { name: "Tampa Theatre", type: "Entertainment", rating: 4.6, safety: 4.8, blackOwned: false, image: "🎬", neighborhood: "Downtown", price: "$", openLate: true },
+        { name: "Bayshore Boulevard", type: "Nature", rating: 4.4, safety: 4.6, blackOwned: false, image: "🌊", neighborhood: "South Tampa", price: "Free", openLate: false },
+        { name: "Sparkman Wharf", type: "Restaurant", rating: 4.3, safety: 4.5, blackOwned: false, image: "🍽️", neighborhood: "Channelside", price: "$", openLate: false },
+        { name: "Cigar City Brewing", type: "Nightlife", rating: 4.5, safety: 4.6, blackOwned: false, image: "🍺", neighborhood: "Westshore", price: "$", openLate: true }
+      ],
+      'Jacksonville': [
+        { name: "Black Sheep Restaurant", type: "Restaurant", rating: 4.5, safety: 4.6, blackOwned: false, image: "🐑", neighborhood: "Five Points", price: "$$", openLate: false },
+        { name: "The Florida Theatre", type: "Entertainment", rating: 4.6, safety: 4.7, blackOwned: false, image: "🎭", neighborhood: "Downtown", price: "$", openLate: true },
+        { name: "Intuition Ale Works", type: "Nightlife", rating: 4.4, safety: 4.5, blackOwned: false, image: "🍺", neighborhood: "Riverside", price: "$", openLate: true },
+        { name: "Jacksonville Zoo", type: "Family Fun", rating: 4.3, safety: 4.8, blackOwned: false, image: "🦁", neighborhood: "Northside", price: "$$", openLate: false },
+        { name: "Town Hall", type: "Restaurant", rating: 4.4, safety: 4.5, blackOwned: false, image: "🍽️", neighborhood: "Five Points", price: "$", openLate: false },
+        { name: "Volstead", type: "Nightlife", rating: 4.3, safety: 4.4, blackOwned: false, image: "🍸", neighborhood: "Riverside", price: "$$", openLate: true },
+        { name: "MOSH", type: "Family Fun", rating: 4.2, safety: 4.7, blackOwned: false, image: "🔬", neighborhood: "Southbank", price: "$", openLate: false },
+        { name: "St. Johns Town Center", type: "Shopping", rating: 4.1, safety: 4.6, blackOwned: false, image: "🛍️", neighborhood: "Southside", price: "$$", openLate: false },
+        { name: "Kathryn Abbey Hanna Park", type: "Nature", rating: 4.5, safety: 4.5, blackOwned: false, image: "🏖️", neighborhood: "Mayport", price: "Free", openLate: false },
+        { name: "Times-Union Center", type: "Entertainment", rating: 4.4, safety: 4.7, blackOwned: false, image: "🏟️", neighborhood: "Downtown", price:
